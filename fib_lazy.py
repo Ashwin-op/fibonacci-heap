@@ -85,14 +85,12 @@ class FibHeapLazy:
     def extract_min_lazy(self) -> FibNodeLazy:
         if not self.min:
             return None
-        while next((root for root in self.roots if root.vacant), None):
-            for root in self.roots:
-                if root.vacant:
-                    self.roots.extend(root.children)
-                    for child in root.children:
-                        child.parent = None
-                    self.roots.remove(root)
-                    self.size -= 1
+        while root := next((root for root in self.roots if root.vacant), None):
+            self.roots.extend(root.children)
+            for child in root.children:
+                child.parent = None
+            self.roots.remove(root)
+            self.size -= 1
         self.consolidate_lazy()
         return self.min
 
